@@ -52,6 +52,23 @@ app.post('/api/bugs', function(req, res) {
   })
 });
 
+app.post('/api/filter', function(req, res) {
+  var filter = {};
+  console.log('req query', req.body);
+  if (req.body.priority) {
+    filter.priority = req.body.priority;
+  }
+  if (req.body.status) {
+    filter.status = req.body.status;
+  }
+  console.log('api filter', filter);
+  Bug.find(filter)
+    .then(function(bugs){
+      console.log('get bugs with filter', bugs);
+      res.send(bugs || []);
+    })
+});
+
 const server = app.listen(3000, function() {
   const host = server.address().address;
   const port = server.address().port;
