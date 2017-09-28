@@ -9,7 +9,6 @@ import BugAdd from './BugAdd';
 
 class BugRow extends React.Component {
   render() {
-    // console.log("Rending BugRow:", this.props.bug);
     return (
       <tr>
         <td>
@@ -26,7 +25,6 @@ class BugRow extends React.Component {
 
 class BugTable extends React.Component {
   render() {
-    // console.log("Rending bug table, num items:", this.props.bugs.length);
     var bugRows = this.props.bugs.map(bug => {
       return <BugRow key={bug._id} bug={bug} />
     });
@@ -62,7 +60,6 @@ class BugList extends React.Component {
   }
 
   componentDidMount() {
-    console.log("BugList: componentDidMount");
     fetch('/api/bugs')
       .then((res)=>res.json())
       .then(data=>this.setState({
@@ -75,16 +72,13 @@ class BugList extends React.Component {
     var newQuery = queryString.parse(this.props.location.search);
     if (oldQuery.priority === newQuery.priority &&
         oldQuery.status === newQuery.status) {
-      console.log("BugList: componentDidUpdate, no change in filter, no updating");
       return;
     } else {
-      console.log("BugList: componentDidUpdate, loading data with new filter");
       this.loadData();
     }
   }
 
   addBug(bug) {
-    console.log("Adding bug:", bug);
     fetch('/api/bugs', {
 			method: 'POST',
 			headers: {
@@ -94,11 +88,9 @@ class BugList extends React.Component {
 			body: JSON.stringify(bug)
 		}).then(function(res){ return res.json(); })
 			.then(function(data){
-        console.log('addBug', data);
         var bug = data;
         var bugsModified = this.state.bugs.concat(bug);
         this.setState({bugs: bugsModified});
-        console.log(this.state.bugs);
 		}.bind(this));
 
   }
@@ -106,7 +98,6 @@ class BugList extends React.Component {
   loadData() {
     var query = queryString.parse(this.props.location.search) || {};
     var filter = {priority: query.priority, status: query.status};
-    console.log("apply filter", filter);
     fetch('/api/filter', {
 			method: 'POST',
 			headers: {
@@ -116,10 +107,8 @@ class BugList extends React.Component {
 			body: JSON.stringify(filter)
 		}).then(function(res){ return res.json(); })
 			.then(function(data){
-        console.log('filter', data);
         var bugs = data;
         this.setState({bugs: bugs});
-        console.log(this.state.bugs);
 		}.bind(this));
   }
 
@@ -128,7 +117,6 @@ class BugList extends React.Component {
   }
 
   render() {
-    // console.log("Rending bug list, num items:", this.state.bugs.length);
     const parsed = queryString.parse(this.props.location.search);
     return (
       <div>

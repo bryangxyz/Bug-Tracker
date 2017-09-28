@@ -35,8 +35,6 @@ class BugEdit extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log("prevProps", prevProps);
-    console.log("BugEdit: componentDidUpdate", prevProps.match.params.id, this.props.match.params.id);
     if (this.props.match.params.id != prevProps.match.params.id) {
       this.loadData();
     }
@@ -83,14 +81,11 @@ class BugEdit extends React.Component {
 		}).then(function(res){ return res.json(); })
 			.then(function(data){
         this.showSuccess();
-        console.log('Update bug back', data);
 		}.bind(this));
   }
 
   showSuccess() {
-    console.log("showSuccess", this.state.successVisible);
     this.setState({successVisible: true});
-    console.log("showSuccess after", this.state.successVisible);
 
   }
 

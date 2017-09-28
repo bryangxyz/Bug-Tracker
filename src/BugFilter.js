@@ -25,10 +25,8 @@ class BugFilter extends React.Component {
   componentWillReceiveProps(newProps) {
     if (newProps.initFilter.status === this.state.status
         && newProps.initFilter.priority === this.state.priority) {
-      console.log("BugFilter: componentWillReceiveProps, no change");
       return;
     }
-    console.log("BugFilter: componentWillReceiveProps, new filter", newProps.initFilter);
     this.setState({status: newProps.initFilter.status, priority: newProps.initFilter.priority});
   }
 
@@ -53,7 +51,6 @@ class BugFilter extends React.Component {
   }
 
   render() {
-    console.log("Rending BugFilter, state=", this.state);
     return (
       <Panel collapsible header="Filter">
         <Grid fluid={true}>
