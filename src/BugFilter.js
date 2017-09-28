@@ -1,5 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Button from 'react-bootstrap/lib/Button';
+import Panel from 'react-bootstrap/lib/Panel';
+import Grid from 'react-bootstrap/lib/Grid';
+import Row from 'react-bootstrap/lib/Row';
+import Col from 'react-bootstrap/lib/Col';
+import FormControl from 'react-bootstrap/lib/FormControl';
+import ControlLabel from 'react-bootstrap/lib/ControlLabel';
+
 
 class BugFilter extends React.Component {
   constructor(props) {
@@ -47,26 +55,35 @@ class BugFilter extends React.Component {
   render() {
     console.log("Rending BugFilter, state=", this.state);
     return (
-      <div>
-        <h3>Filter</h3>
-        Status:
-        <select value={this.state.status} onChange={this.onChangeStatus}>
-          <option value=''>(Any)</option>
-          <option value='New'>New</option>
-          <option value='Open'>Open</option>
-          <option value='Closed'>Closed</option>
-        </select>
-        <br/>
-        Priority:
-        <select value={this.state.priority} onChange={this.onChangePriority}>
-          <option value=''>(Any)</option>
-          <option value='P1'>P1</option>
-          <option value='P2'>P2</option>
-          <option value='P3'>P3</option>
-        </select>
-        <br/>
-        <button onClick={this.submit}>Apply</button>
-      </div>
+      <Panel collapsible header="Filter">
+        <Grid fluid={true}>
+          <Row>
+            <Col xs={12} sm={6} md={4}>
+              <ControlLabel>Status</ControlLabel>
+              <FormControl componentClass="select" name="status" value={this.state.status} onChange={this.onChangeStatus}>
+                <option value=''>(Any)</option>
+                <option value="New">New</option>
+                <option value="Open">Open</option>
+                <option value="Fixed">Fixed</option>
+                <option value="Closed">Closed</option>
+              </FormControl>
+            </Col>
+            <Col xs={12} sm={6} md={4}>
+              <ControlLabel>Priority</ControlLabel>
+              <FormControl componentClass="select" name="priority" value={this.state.priority} onChange={this.onChangePriority}>
+                <option value=''>(Any)</option>
+                <option value="P1">P1</option>
+                <option value="P2">P2</option>
+                <option value="P3">P3</option>
+              </FormControl>
+            </Col>
+            <Col xs={12} sm={6} md={4}>
+            <br />
+            <Button bsStyle="primary" onClick={this.submit}>Search</Button>
+            </Col>
+          </Row>
+        </Grid>
+      </Panel>
     );
   }
 };

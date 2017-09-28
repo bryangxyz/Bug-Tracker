@@ -26,17 +26,14 @@ app.use(bodyParser.json());
 app.get('/api/bugs', function(req, res) {
   Bug.find({})
     .then(function(bugs){
-      console.log('get bugs', bugs);
       res.send(bugs || []);
     })
 });
 
 // Get a single record
 app.get('/api/bugs/:id', function(req, res) {
-  console.log('get single record', req.params.id);
   Bug.findOne({_id: req.params.id})
     .then(function(bug){
-      console.log('get bug', bug);
       res.send(bug || []);
     })
 });
@@ -44,19 +41,16 @@ app.get('/api/bugs/:id', function(req, res) {
 // Modify one record given its ID
 app.put('/api/bugs/:id', function(req, res) {
   var bug = req.body;
-  console.log("Modifying bug:", req.params.id, bug);
   Bug.findByIdAndUpdate(req.params.id, {$set: bug}, function(err, result) {
     if (err) {
       console.log(err);
     }
-    console.log("Result:" + result);
     res.send(result);
   });
 });
 
 // Insert a record
 app.post('/api/bugs', function(req, res) {
-  console.log("Req body:", req.body);
   var priority = req.body.priority;
   var status = req.body.status;
   var owner = req.body.owner;
@@ -76,17 +70,14 @@ app.post('/api/bugs', function(req, res) {
 // Get a list of filtered records
 app.post('/api/filter', function(req, res) {
   var filter = {};
-  console.log('req query', req.body);
   if (req.body.priority) {
     filter.priority = req.body.priority;
   }
   if (req.body.status) {
     filter.status = req.body.status;
   }
-  console.log('api filter', filter);
   Bug.find(filter)
     .then(function(bugs){
-      console.log('get bugs with filter', bugs);
       res.send(bugs || []);
     })
 });

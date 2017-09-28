@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from "jquery";
 import queryString from 'query-string';
+import {Link} from 'react-router-dom';
 
 import BugFilter from './BugFilter';
 import BugAdd from './BugAdd';
@@ -11,7 +12,9 @@ class BugRow extends React.Component {
     // console.log("Rending BugRow:", this.props.bug);
     return (
       <tr>
-        <td>{this.props.bug._id}</td>
+        <td>
+          <Link to={'/bugs/' + this.props.bug._id}>{this.props.bug._id}</Link>
+        </td>
         <td>{this.props.bug.status}</td>
         <td>{this.props.bug.priority}</td>
         <td>{this.props.bug.owner}</td>
@@ -29,7 +32,7 @@ class BugTable extends React.Component {
     });
 
     return (
-      <table>
+      <table className="table table-striped table-bordered table-condensed">
         <thead>
           <tr>
             <th>Id</th>
@@ -131,9 +134,7 @@ class BugList extends React.Component {
       <div>
         <h1>Bug Tracker</h1>
         <BugFilter submitHandler={this.changeFilter} initFilter={parsed}/>
-        <hr />
         <BugTable bugs={this.state.bugs}/>
-        <hr />
         <BugAdd addBug={this.addBug}/>
       </div>
     );
