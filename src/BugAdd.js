@@ -17,7 +17,7 @@ class BugAdd extends React.Component {
   }
 
   render() {
-    console.log("Rending BugAdd");
+    // console.log("Rending BugAdd");
     return (
       <div>
         <form name="bugAdd">

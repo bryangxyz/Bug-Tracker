@@ -20,11 +20,9 @@ app.use(webpackDevMiddleware(compiler, {
   historyApiFallback: true,
 }));
 
-var bugData = [
-  {id: 1, priority: 'P1', status:'Open', owner:'Ravan', title:'App crashes on open'},
-  {id: 2, priority: 'P2', status:'New', owner:'Eddie', title:'Misaligned border on panel'}
-];
+app.use(bodyParser.json());
 
+// Get a list of records
 app.get('/api/bugs', function(req, res) {
   Bug.find({})
     .then(function(bugs){
@@ -33,7 +31,30 @@ app.get('/api/bugs', function(req, res) {
     })
 });
 
-app.use(bodyParser.json());
+// Get a single record
+app.get('/api/bugs/:id', function(req, res) {
+  console.log('get single record', req.params.id);
+  Bug.findOne({_id: req.params.id})
+    .then(function(bug){
+      console.log('get bug', bug);
+      res.send(bug || []);
+    })
+});
+
+// Modify one record given its ID
+app.put('/api/bugs/:id', function(req, res) {
+  var bug = req.body;
+  console.log("Modifying bug:", req.params.id, bug);
+  Bug.findByIdAndUpdate(req.params.id, {$set: bug}, function(err, result) {
+    if (err) {
+      console.log(err);
+    }
+    console.log("Result:" + result);
+    res.send(result);
+  });
+});
+
+// Insert a record
 app.post('/api/bugs', function(req, res) {
   console.log("Req body:", req.body);
   var priority = req.body.priority;
@@ -52,6 +73,7 @@ app.post('/api/bugs', function(req, res) {
   })
 });
 
+// Get a list of filtered records
 app.post('/api/filter', function(req, res) {
   var filter = {};
   console.log('req query', req.body);

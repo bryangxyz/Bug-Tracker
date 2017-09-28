@@ -1,16 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from "jquery";
+import queryString from 'query-string';
 
 import BugFilter from './BugFilter';
 import BugAdd from './BugAdd';
 
 class BugRow extends React.Component {
   render() {
-    console.log("Rending BugRow:", this.props.bug);
+    // console.log("Rending BugRow:", this.props.bug);
     return (
       <tr>
-        <td>{this.props.bug.id}</td>
+        <td>{this.props.bug._id}</td>
         <td>{this.props.bug.status}</td>
         <td>{this.props.bug.priority}</td>
         <td>{this.props.bug.owner}</td>
@@ -22,9 +23,9 @@ class BugRow extends React.Component {
 
 class BugTable extends React.Component {
   render() {
-    console.log("Rending bug table, num items:", this.props.bugs.length);
+    // console.log("Rending bug table, num items:", this.props.bugs.length);
     var bugRows = this.props.bugs.map(bug => {
-      return <BugRow key={bug.id} bug={bug} />
+      return <BugRow key={bug._id} bug={bug} />
     });
 
     return (
@@ -54,14 +55,29 @@ class BugList extends React.Component {
     };
     this.addBug = this.addBug.bind(this);
     this.loadData = this.loadData.bind(this);
+    this.changeFilter = this.changeFilter.bind(this);
   }
 
   componentDidMount() {
+    console.log("BugList: componentDidMount");
     fetch('/api/bugs')
       .then((res)=>res.json())
       .then(data=>this.setState({
         bugs: data,
       }));
+  }
+
+  componentDidUpdate(prevProps) {
+    var oldQuery = queryString.parse(prevProps.location.search);
+    var newQuery = queryString.parse(this.props.location.search);
+    if (oldQuery.priority === newQuery.priority &&
+        oldQuery.status === newQuery.status) {
+      console.log("BugList: componentDidUpdate, no change in filter, no updating");
+      return;
+    } else {
+      console.log("BugList: componentDidUpdate, loading data with new filter");
+      this.loadData();
+    }
   }
 
   addBug(bug) {
@@ -84,7 +100,9 @@ class BugList extends React.Component {
 
   }
 
-  loadData(filter) {
+  loadData() {
+    var query = queryString.parse(this.props.location.search) || {};
+    var filter = {priority: query.priority, status: query.status};
     console.log("apply filter", filter);
     fetch('/api/filter', {
 			method: 'POST',
@@ -102,12 +120,17 @@ class BugList extends React.Component {
 		}.bind(this));
   }
 
+  changeFilter(newFilter) {
+    this.props.history.push({search: '?' + $.param(newFilter)});
+  }
+
   render() {
-    console.log("Rending bug list, num items:", this.state.bugs.length);
+    // console.log("Rending bug list, num items:", this.state.bugs.length);
+    const parsed = queryString.parse(this.props.location.search);
     return (
       <div>
         <h1>Bug Tracker</h1>
-        <BugFilter submitHandler={this.loadData}/>
+        <BugFilter submitHandler={this.changeFilter} initFilter={parsed}/>
         <hr />
         <BugTable bugs={this.state.bugs}/>
         <hr />
