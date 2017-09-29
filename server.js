@@ -83,8 +83,10 @@ app.post('/api/filter', function(req, res) {
     })
 });
 
-const server = app.listen(process.env.PORT || 3000, function() {
+var port = process.env.PORT || 8000;
+
+const server = app.listen(port, function() {
   const host = server.address().address;
-  const port = server.address().port;
-  console.log('Example app listening at http://%s:%s', host, port);
+  // const port = server.address().port;
+  console.log('Example app listening at http://%s:%s', host, server.address().port);
 });
