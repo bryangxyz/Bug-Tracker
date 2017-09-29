@@ -7,8 +7,9 @@ const app = express();
 const Bug = require('./scripts/bugs.js');
 const db = require('./scripts/db.js');
 const compiler = webpack(webpackConfig);
+const path = require('path');
 
-app.use(express.static(__dirname + '/www'));
+app.use(express.static(path.resolve(__dirname + '/www')));
 
 app.use(webpackDevMiddleware(compiler, {
   hot: true,
